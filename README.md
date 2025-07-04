@@ -13,6 +13,9 @@ cd Streaming
 ```  
 2. Kafka 환경 구성
 ```
+- 외부 IP 입력
+export DOCKER_HOST_IP=<YOUR_PUBLIC_IP>
+
 docker-compose up -d
 ```  
 3. API 데이터 수집
@@ -23,3 +26,7 @@ python src/main.py
 ```
 python src/consumer.py
 ```
+  
+### 제한 사항
+- 빗썸 API는 1초당 150회 요청 가능합니다.  
+- 초과 요청을 하시는 경우 API 사용이 일시적으로 제한됩니다.
