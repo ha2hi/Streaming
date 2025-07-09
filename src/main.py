@@ -8,7 +8,7 @@ import functools
 import time
 import os
 
-BROKER_LIST = ["54.180.149.232:9091"]
+BROKER_LIST = ["43.201.105.43:9091"]
 TOPIC = "transction"
 
 def retry_with_backoff(max_retries: int = 5,
@@ -63,8 +63,7 @@ class KafkaDataProducerService:
             request_timeout_ms=30000,
             linger_ms = 0,
             delivery_timeout_ms = 120000,
-            enable_idempotence = True,
-            compression_type = "snappy"
+            enable_idempotence = True
         )
 
     def publish(self, messages):

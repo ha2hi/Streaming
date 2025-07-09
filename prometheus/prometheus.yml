@@ -1,0 +1,14 @@
+volumes:
+  grafana-data:
+(base) root@ip-172-13-5-175:~/Streaming/prometheus# cat prometheus.yml 
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['prometheus:9090']
+
+  - job_name: 'kafka'
+    static_configs:
+     - targets: ['kafka-exporter:9308']
