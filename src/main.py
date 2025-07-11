@@ -97,7 +97,8 @@ if __name__ == "__main__":
             if not tickers:
                 print("No tickers retrived; aborting")
             else:
-                messages = [Api.get_price(t) for t in tickers]
+                # 코인 이름 추가 2025.07.10
+                messages = [dict(Api.get_price(t[0]), name=t[1]) for t in tickers]
                 service.publish(messages)
 
             time.sleep(1)

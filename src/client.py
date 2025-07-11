@@ -11,9 +11,10 @@ class Api:
         resp = None
         try:
             resp = PublicApi.ticker(is_deatils)
-
-            krw_ticker = [item["market"] for item in resp if item["market"].startswith("KRW-")]
-            krw_ticker = krw_ticker[:30]
+            
+            # 코인 이름 추가 2025.07.10
+            krw_ticker = [(item["market"], item["korean_name"]) for item in resp if item["market"].startswith("KRW-")]
+            krw_ticker = krw_ticker[:70]
             return krw_ticker
         except Exception:
             return resp

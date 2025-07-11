@@ -1,0 +1,11 @@
+./bin/flink run-application \
+  --target kubernetes-application \
+  --parallelism 8 \
+  -Dkubernetes.cluster-id=my-application-word-count \
+  -Dtaskmanager.memory.process.size=4096m \
+  -Dkubernetes.taskmanager.cpu=2 \
+  -Dtaskmanager.numberOfTaskSlots=4 \
+  -Dkubernetes.container.image=hiha2/pyflink-test:1.20.2 \
+  -Dkubernetes.rest-service.exposed.type=NodePort \
+  --pyModule word_count \
+  --pyFiles /opt/flink/examples/python/table/word_count.py

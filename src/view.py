@@ -48,7 +48,7 @@ try:
             st.title("📊 Trade Volume Per Minute")
             # st.write("Flink에서 저장된 데이터를 Streamlit에서 시각화합니다.")
             
-            st.dataframe(df)
+            st.dataframe(df.set_index(df.columns[0]))
     else:
         print("해당 prefix에 객체가 없습니다.")
 
