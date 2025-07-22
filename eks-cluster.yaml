@@ -1,0 +1,43 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: ${CLUSTER_NAME}
+  region: ${AWS_DEFAULT_REGION}
+  version: "${K8S_VERSION}"
+  tags: 
+    project: spark-on-eks
+    version: "${K8S_VERSION}"
+
+vpc:
+  id: "vpc-06e8bc80bc6c171ae"
+  subnets:
+    public:
+      public-one:
+        id: "subnet-07505bf7d9126a5da"
+      public-two:
+        id: "subnet-0529b5cdfee5b7945"
+
+managedNodeGroups:
+- name: ng-job
+  instanceType: t3.xlarge
+  desiredCapacity: 2
+  minSize: 1
+  maxSize: 3
+  volumeType: gp3
+  volumeSize: 50
+  privateNetworking: true
+  iam:
+    attachPolicyARNs:
+    - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+    - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+    - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+    - arn:aws:iam::aws:policy/AmazonS3FullAccess
+  subnets:
+  - public-one
+  - public-two
+  ssh: 
+    publicKeyName: my-eks
+    allow: true
+  tags: 
+    nodegroup-name: ng-job
