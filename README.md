@@ -4,7 +4,10 @@
   
 Apache Flink와 Kafka를 기반으로 한 스트리밍 데이터 처리 애플리케이션입니다.  
 Kafka는 Docker Compose를 활용하여 구성했고, Flink 또한 로컬에서 실행할 수 있도록 구성하였습니다.  
-  
+
+## 아키텍처
+<img width="1000" height="454" alt="Image" src="https://github.com/user-attachments/assets/a42c84d4-9239-42ca-964d-88d3b5f42514" />  
+
 ### 실행 항법
 1. 레포지토리 클론
 ```
