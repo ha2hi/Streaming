@@ -7,22 +7,80 @@ Kafka는 Docker Compose를 활용하여 구성했고, Flink 또한 로컬에서 
 ## 아키텍처
 <img width="1000" height="454" alt="Image" src="https://github.com/user-attachments/assets/a42c84d4-9239-42ca-964d-88d3b5f42514" />  
 
-### 실행 항법
-1. 레포지토리 클론
+# 환경 구성
+## Docker
+### Docker 설치
 ```
-git clone https://github.com/ha2hi/Streaming.git
-cd Streaming
+sudo apt-get update
+
+# Docker 필요 패키지 설치
+sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+
+# GPG 키 추가
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+# 공식 apt 저장소 추가
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+sudo apt-get update
+
+# docker 설치
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+
 ```  
 
-2. Kafka 환경 구성
+### docker-compose 설치
 ```
-- 외부 IP 입력
-export DOCKER_HOST_IP=<YOUR_PUBLIC_IP>
+# docker-compose 설치
+# 버전 확인 : https://github.com/docker/compose/releases
+sudo curl -L "https://github.com/docker/compose/releases/download/v2.5.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 
-docker-compose up -d
+# 권한 부여
+sudo chmod +x /usr/local/bin/docker-compose
+
+# 심볼릭 링크 연결
+sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+
+# 버전 확인
+docker-compose --version
+```
+
+## AWS EKS
+### AWS CLI v2 설치
+```
+# uzip 설치
+apt install unzip
+
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+
+# 설치 확인
+aws --version
+
+# AWS 연결
+aws configure
 ```  
 
-3. EKS 실행
+### eksctl 설치
+```
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+sudo mv /tmp/eksctl /usr/local/bin
+
+eksctl version
+```  
+
+### kubectl 설치
+```
+curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
+echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
+
+kubectl version --short --client
+```
+
+### EKS Cluster 생성
 ```
 # 환경 변수
 export K8S_VERSION="1.31"
@@ -34,13 +92,72 @@ envsubst < eks-cluster.yaml | eksctl create cluster -f -
 
 # kubeconfig 파일 생성
 aws eks update-kubeconfig --region <REGION_CODE> --name <CLUSTER_NAME>
-```
-
-
-4. API 데이터 수집
-```
-python src/main.py
 ```  
+
+## Apache Flink 설치
+### JDK 17 설치
+```
+sudo apt-get update 
+
+sudo apt-get install openjdk-17-jdk
+
+# Java 버전 확인
+java -version
+
+# Java 설치 경로 확인
+readlink -f $(which java)
+
+# JAVA_HOME 경로 등록
+vi /etc/profile​
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+export PATH=$PATH:$JAVA_HOME/bin
+
+# 환경변수 적용
+source /etc/profile
+
+# 확인
+echo $JAVA_HOME
+echo $PATH | grep java
+```  
+
+### Flink 1.20.2 설치
+```
+wget https://dlcdn.apache.org/flink/flink-1.20.2/flink-1.20.2-bin-scala_2.12.tgz
+
+# 압축 해제
+tar -xvzf flink-1.20.2-bin-scala_2.12.tgz
+
+# pip 설치
+sudo apt install python3-pip
+```
+
+# 실행 항법
+1. 레포지토리 클론
+```
+# git 설치
+sudo apt-get install git -y
+
+# git 버전 확인
+git --version
+
+git clone https://github.com/ha2hi/Streaming.git
+
+cd Streaming
+```  
+
+2. Kafka 환경 구성
+```
+- 외부 IP 입력
+export DOCKER_HOST_IP=<YOUR_PUBLIC_IP>
+
+docker-compose up -d
+```  
+
+3. API 데이터 수집
+```
+python3 src/main.py
+``` 
+
 1. Flink 애플리케이션 실행
 ```
 python src/consumer.py
