@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: streamlit-app-deployment
+  labels:
+    app: streamlit-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: streamlit-app
+  template:
+    metadata:
+      labels:
+        app: streamlit-app
+    spec:
+      containers:
+      - name: streamlit-app
+        image: hiha2/view:0.0.1
+        ports:
+        - containerPort: 8501
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: / # Streamlit 앱의 기본 경로
+            port: 8501
+          initialDelaySeconds: 30 # Pod 시작 후 첫 번째 프로브까지 대기 시간
+          periodSeconds: 10 # 프로브 실행 주기
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8501
+          initialDelaySeconds: 15
+          periodSeconds: 5

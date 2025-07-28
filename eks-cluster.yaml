@@ -19,11 +19,11 @@ vpc:
         id: "subnet-0529b5cdfee5b7945"
 
 managedNodeGroups:
-- name: ng-job
+- name: flink-job
   instanceType: t3.xlarge
-  desiredCapacity: 2
+  desiredCapacity: 1
   minSize: 1
-  maxSize: 3
+  maxSize: 2
   volumeType: gp3
   volumeSize: 50
   privateNetworking: true
@@ -40,4 +40,4 @@ managedNodeGroups:
     publicKeyName: my-eks
     allow: true
   tags: 
-    nodegroup-name: ng-job
+    nodegroup-name: flink-job

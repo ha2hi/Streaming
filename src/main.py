@@ -8,7 +8,7 @@ import functools
 import time
 import os
 
-BROKER_LIST = ["13.124.76.51:9091"]
+BROKER_LIST = ["localhost:9091"]
 TOPIC = "transction"
 
 def retry_with_backoff(max_retries: int = 5,

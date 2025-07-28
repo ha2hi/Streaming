@@ -43,6 +43,11 @@ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 # 버전 확인
 docker-compose --version
+```  
+
+### Docker Login
+```
+docker login
 ```
 
 ## AWS EKS
@@ -126,9 +131,35 @@ wget https://dlcdn.apache.org/flink/flink-1.20.2/flink-1.20.2-bin-scala_2.12.tgz
 
 # 압축 해제
 tar -xvzf flink-1.20.2-bin-scala_2.12.tgz
+```
 
-# pip 설치
-sudo apt install python3-pip
+## 파이썬 가상환경
+### Conda 설치
+```
+sudo apt update
+
+sudo apt install curl -y
+
+curl --output anaconda.sh https://repo.anaconda.com/archive/Anaconda3-2022.10-Linux-x86_64.sh
+sha256sum anaconda.sh
+bash anaconda.sh
+
+# 환경 변수 추가
+sudo vi ~/.bashrc
+export PATH=~/anaconda3/bin:~/anaconda3/condabin:$PATH
+source ~/.bashrc
+
+conda -V
+```
+
+### 가상환경 생성
+```
+conda create -n streaming_python python=3.9 -y
+source ~/anaconda3/etc/profile.d/conda.sh
+
+conda activate streaming_python
+
+pip install -r requirements.txt
 ```
 
 # 실행 항법
@@ -155,19 +186,61 @@ docker-compose up -d
 
 3. API 데이터 수집
 ```
-python3 src/main.py
+python src/main.py
 ``` 
 
-1. Flink 애플리케이션 실행
+4. Flink 애플리케이션 실행
+- Docker Custom 이미지 생성
 ```
-python src/consumer.py
+cd flink-kubernetes
+
+# docker build
+docker build -t hiha2/pyflink:1.20.2 .
+
+# docker push
+docker push hiha2/pyflink:1.20.2
 ```
-  
-### 제한 사항
+- 권한 추가
+```
+kubectl create clusterrolebinding flink-role-binding-default --clusterrole=edit --serviceaccount=default:default
+```  
+
+- Application Mode 실행
+```
+./bin/flink run-application \
+  --target kubernetes-application \
+  --parallelism 3 \
+  -Dkubernetes.cluster-id=my-application \
+  -Dtaskmanager.memory.process.size=4096m \
+  -Dkubernetes.taskmanager.cpu=2 \
+  -Dtaskmanager.numberOfTaskSlots=4 \
+  -Dkubernetes.container.image=hiha2/pyflink:1.20.2 \
+  -Dkubernetes.rest-service.exposed.type=NodePort \
+  -Dcontainerized.master.env.ENABLE_BUILT_IN_PLUGINS=flink-s3-fs-hadoop-1.20.2.jar \
+  -Dcontainerized.taskmanager.env.ENABLE_BUILT_IN_PLUGINS=flink-s3-fs-hadoop-1.20.2.jar \
+  --pyModule consumer \
+  --pyFiles /opt/flink/usrlib/consumer.py
+```
+
+5. Stremlit 실행
+```
+cd view
+
+docker build -t hiha2/view:0.0.1 .
+
+docker push hiha2/view:0.0.1
+
+kubectl apply -f deployment.yml
+kubectl apply -f service.yml
+```  
+
+6. 결과
+
+# 제한 사항
 - 빗썸 API는 1초당 150회 요청 가능합니다.  
 - 초과 요청을 하시는 경우 API 사용이 일시적으로 제한됩니다.
   
-### Task lists
+# Task lists
 - [x] Standalone to Kubernetes
 - [ ] Using RocksDB State Backend
 - [ ] Using Karpenter
