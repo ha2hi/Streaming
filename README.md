@@ -235,6 +235,7 @@ kubectl apply -f service.yml
 ```  
 
 6. 결과
+<img width="1500" height="438" alt="Image" src="https://github.com/user-attachments/assets/21d9772b-451b-47b9-82d3-6bec2d685f49" />
 
 # 제한 사항
 - 빗썸 API는 1초당 150회 요청 가능합니다.  
