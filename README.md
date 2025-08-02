@@ -243,5 +243,6 @@ kubectl apply -f service.yml
   
 # Task lists
 - [x] Standalone to Kubernetes
-- [ ] Using RocksDB State Backend
+- [x] Using RocksDB State Backend
+- [ ] Failure Recover
 - [ ] Using Karpenter

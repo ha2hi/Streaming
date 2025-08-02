@@ -10,8 +10,19 @@ def main():
     settings = EnvironmentSettings.in_streaming_mode()
     t_env = StreamTableEnvironment.create(env, environment_settings=settings)
     t_env.get_config().set_local_timezone("Asia/Seoul")
+
+    # set the checkpoint mode to EXACTLY_ONCE
     t_env.get_config().get_configuration().set_string("execution.checkpointing.mode", "EXACTLY_ONCE")
     t_env.get_config().get_configuration().set_string("execution.checkpointing.interval", "1 min")
+
+    # set the statebackend type to "rocksdb", other available options are "hashmap"
+    t_env.get_config().set("state.backend.type", "rocksdb")
+
+    # set the checkpoint directory, which is required by the RocksDB statebackend
+    # 작업 종료 시에도 CheckPoint를 삭제되지 않기 위해 "RETAIN_ON_CANCELLATION" 사용
+    t_env.get_config().set("execution.checkpointing.dir", "s3a://pyflink-test-hs/checkpoint/")
+    t_env.get_config().set("execution.checkpointing.externalized-checkpoint-retention", "RETAIN_ON_CANCELLATION")
+
 
     # 2. Kafka 소스 테이블 생성
     t_env.execute_sql("""
