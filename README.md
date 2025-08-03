@@ -209,15 +209,18 @@ kubectl create clusterrolebinding flink-role-binding-default --clusterrole=edit 
 ```
 ./bin/flink run-application \
   --target kubernetes-application \
-  --parallelism 3 \
   -Dkubernetes.cluster-id=my-application \
   -Dtaskmanager.memory.process.size=4096m \
   -Dkubernetes.taskmanager.cpu=2 \
   -Dtaskmanager.numberOfTaskSlots=4 \
-  -Dkubernetes.container.image=hiha2/pyflink:1.20.2 \
+  -Dkubernetes.container.image=hiha2/test_job10 \
   -Dkubernetes.rest-service.exposed.type=NodePort \
   -Dcontainerized.master.env.ENABLE_BUILT_IN_PLUGINS=flink-s3-fs-hadoop-1.20.2.jar \
   -Dcontainerized.taskmanager.env.ENABLE_BUILT_IN_PLUGINS=flink-s3-fs-hadoop-1.20.2.jar \
+  -Drestart-strategy.type=exponential-delay \
+  -Drestart-strategy.exponential-delay.initial-backoff=1s \
+  -Drestart-strategy.exponential-delay.backoff-multiplier=2 \
+  -Drestart-strategy.exponential-delay.max-backoff=10s \
   --pyModule consumer \
   --pyFiles /opt/flink/usrlib/consumer.py
 ```
@@ -238,11 +241,13 @@ kubectl apply -f service.yml
 <img width="1500" height="438" alt="Image" src="https://github.com/user-attachments/assets/21d9772b-451b-47b9-82d3-6bec2d685f49" />
 
 # 제한 사항
+[Bithumb API]  
 - 빗썸 API는 1초당 150회 요청 가능합니다.  
 - 초과 요청을 하시는 경우 API 사용이 일시적으로 제한됩니다.
   
 # Task lists
 - [x] Standalone to Kubernetes
 - [x] Using RocksDB State Backend
-- [ ] Failure Recover
+- [x] Failure Recover
+- [ ] UPbit trading volume added
 - [ ] Using Karpenter
