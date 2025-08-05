@@ -250,4 +250,5 @@ kubectl apply -f service.yml
 - [x] Using RocksDB State Backend
 - [x] Failure Recover
 - [ ] UPbit trading volume added
+- [ ] Use Websocket
 - [ ] Using Karpenter

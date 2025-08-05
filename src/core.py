@@ -34,6 +34,21 @@ class PublicApi:
         """
         uri = f"/v1/ticker?markets={markets}"
         return BithumbHttp().get(uri)
+    
+    @staticmethod
+    def upbit_ticker(is_deatils = False):
+        """
+        Description:
+            마켓 코드 조회
+            https://docs.upbit.com/kr/reference/%EB%A7%88%EC%BC%93-%EC%BD%94%EB%93%9C-%EC%A1%B0%ED%9A%8C
+        Params:
+            is_deatils (boolean, Defaults to false) : 유의종목 필드과 같은 상세 정보 노출 여부
+        Return:
+            list : [{'market': 'KRW-BTC', 'korean_name': '비트코인', 'english_name': 'Bitcoin'}]
+        """
+        uri = f"/v1/market/all?is_details={is_deatils}"
+        return UpbitHttp().get(uri)
+
 
 class HttpMethod:
     def __init__(self):
@@ -70,3 +85,12 @@ class BithumbHttp(HttpMethod):
     @property
     def base_url(self):
         return "https://api.bithumb.com"
+    
+class UpbitHttp(HttpMethod):
+    def __init__(self, conkey="", seckey=""):
+        self.API_CONKEY = conkey.encode('utf-8')
+        self.API_SECRET = seckey.encode('utf-8')
+        super(UpbitHttp, self).__init__()
+    @property
+    def base_url(self):
+        return "https://api.upbit.com"
