@@ -240,7 +240,9 @@ kubectl apply -f service.yml
 6. 결과
 <img width="1500" height="438" alt="Image" src="https://github.com/user-attachments/assets/21d9772b-451b-47b9-82d3-6bec2d685f49" />
 
-# 제한 사항
+# 참고 사항
+- Upbit와 Bithum의 Crypto의 Ticker는 동일하나 한글 명은 다르다.  
+
 [Bithumb API]  
 - 빗썸 API는 1초당 150회 요청 가능합니다.  
 - 초과 요청을 하시는 경우 API 사용이 일시적으로 제한됩니다.

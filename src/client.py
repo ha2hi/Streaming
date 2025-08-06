@@ -14,7 +14,7 @@ class Api:
             
             # 코인 이름 추가 2025.07.10
             krw_ticker = [(item["market"], item["korean_name"]) for item in resp if item["market"].startswith("KRW-")]
-            krw_ticker = krw_ticker[:70]
+            #krw_ticker = krw_ticker[:30]
             return krw_ticker
         except Exception:
             return resp
@@ -32,7 +32,7 @@ class Api:
             return resp
         
     @staticmethod
-    def upbit_get_tickers(is_deatils=False):
+    def get_upbit_tickers(is_deatils=False):
         """
         업비트가 지원하는 KRW 마켓 코드 70개
         :param payment_currency : KRW
@@ -44,7 +44,7 @@ class Api:
             
             # 코인 이름 추가 2025.07.10
             krw_ticker = [(item["market"], item["korean_name"]) for item in resp if item["market"].startswith("KRW-")]
-            krw_ticker = krw_ticker[:70]
+            # krw_ticker = krw_ticker[:70]
             return krw_ticker
         except Exception:
             return resp
