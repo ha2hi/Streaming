@@ -6,6 +6,7 @@ Kafka는 Docker Compose를 활용하여 구성했고, Flink 또한 로컬에서 
 
 # 아키텍처
 <img width="1000" height="454" alt="Image" src="https://github.com/user-attachments/assets/a42c84d4-9239-42ca-964d-88d3b5f42514" />  
+
 |API|방식|URL|
 |------|---|---|
 |Bithumb|REST API|https://apidocs.bithumb.com/|
